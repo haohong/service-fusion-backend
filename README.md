@@ -1,8 +1,8 @@
 # Contacts management application
 
-This is the test project for ServiceFusion.
+This is the test project for service_fusion.
 
-## Requirements
+## Requirements Specification
 
 Write and deploy a simple web application to manage contacts preferably
 using Vue, javascript &/ python. It should store a list of persons,
@@ -15,69 +15,38 @@ containing the following fields:
 - one or more phone numbers
 - one or more emails
 
+## Running Locally
 
-## Getting Started
+Make sure you have Python [installed properly](http://install.python-guide.org).  Also, install the [Heroku Toolbelt](https://toolbelt.heroku.com/) and [Postgres](https://devcenter.heroku.com/articles/heroku-postgresql#local-setup).
 
-### Prerequisites
+```sh
+$ git clone git@github.com:heroku/python-getting-started.git
+$ cd python-getting-started
 
-You should have [pyenv](https://github.com/pyenv/pyenv) and [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv) installed to run the backend project.
+$ pipenv install
 
-You should have [yarn](https://yarnpkg.com/en/docs/install) or [npm](https://www.npmjs.com/get-npm?utm_source=house&utm_medium=homepage&utm_campaign=free%20orgs&utm_term=Install%20npm) installed to run the front-end project.
+$ createdb service_fusion
 
+$ python manage.py migrate
+$ python manage.py collectstatic
 
-### Installing
-
-#### Backend
-
-```
-$ cd backend
-$ pip install -r requirements.txt
-```
-
-#### Frontend
-
-```
-$ cd frontend
+$ heroku local
 ```
 
-Install packages.
+Your app should now be running on [localhost:5000](http://localhost:5000/).
 
-```
-$ yarn
-```
+## Deploying to Heroku
 
+```sh
+$ heroku create
+$ git push heroku master
+
+$ heroku run python manage.py migrate
+$ heroku open
+```
 or
 
-```
-$ npm install
-```
-
-Run the app.
-
-```
-$ yarn
-```
-
-or
-
-```
-$ npm start
-```
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Backend
-
-```
-$ cd backend
-$ python manage.py test
-```
-
-## Deployment
-
-The application is deployed to Heroku cloud.
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 ## Built With
 
