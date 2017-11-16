@@ -1,8 +1,8 @@
 from collections import Counter
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
+from phonenumber_field.serializerfields import PhoneNumberField
 
-from .models import Person, Address, Email
+from .models import Person, Address, Email, PhoneNumber
 
 
 def has_duplicate(l):
@@ -44,7 +44,7 @@ class CustomListSerializer(serializers.ListSerializer):
 
 
 class AddressSerializer(serializers.ModelSerializer):
-    """Serializer to map the address model instance into JSON format."""
+    """Serializer to map the Address model instance into JSON format."""
     id = serializers.IntegerField(required=False)
 
     class Meta:
@@ -57,7 +57,7 @@ class AddressSerializer(serializers.ModelSerializer):
 
 
 class EmailSerializer(serializers.ModelSerializer):
-    """Serializer to map the email model instance into JSON format."""
+    """Serializer to map the Email model instance into JSON format."""
 
     id = serializers.IntegerField(required=False)
 
@@ -69,18 +69,34 @@ class EmailSerializer(serializers.ModelSerializer):
         list_serializer_class = CustomListSerializer
 
 
+class PhoneNumberSerializer(serializers.ModelSerializer):
+    """Serializer to map the PhoneNumber model instance into JSON format."""
+
+    id = serializers.IntegerField(required=False)
+    phone_number = PhoneNumberField()
+
+    class Meta:
+        """Meta class to map serializer's fields with model fields."""
+
+        model = PhoneNumber
+        fields = ('id', 'phone_number',)
+        list_serializer_class = CustomListSerializer
+
+
 class PersonSerializer(serializers.ModelSerializer):
-    """Serializer to map the person model instance into JSON format."""
+    """Serializer to map the Person model instance into JSON format."""
 
     addresses = AddressSerializer(many=True, allow_empty=True, required=False)
     emails = EmailSerializer(many=True, allow_empty=False, required=True)
+    phone_numbers = PhoneNumberSerializer(
+        many=True, allow_empty=False, required=True)
 
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
 
         model = Person
-        fields = ('id', 'first_name', 'last_name',
-                  'date_of_birth', 'addresses', 'emails',)
+        fields = ('id', 'first_name', 'last_name', 'date_of_birth',
+                  'addresses', 'emails', 'phone_numbers')
 
     def validate_addresses(self, value):
         """
@@ -118,6 +134,35 @@ class PersonSerializer(serializers.ModelSerializer):
 
         return value
 
+    def validate_phone_numbers(self, value):
+        """
+        Check if there are duplicate phone_numbers
+        Check if phone_numbers already exist in db
+        Add owner_id field to phone_numbers data
+        """
+        phone_numbers = [phone_number_data['phone_number']
+                         for phone_number_data in value]
+        if has_duplicate(phone_numbers):
+            raise serializers.ValidationError(
+                "Duplicate phone_numbers in payload")
+
+        queryset = PhoneNumber.objects.filter(phone_number__in=phone_numbers)
+        if self.instance:
+            existing_phone_number_ids = [
+                phone_number.id for phone_number in self.instance.phone_numbers.all()]
+            queryset = queryset.exclude(id__in=existing_phone_number_ids)
+
+        if queryset:
+            errors = ["{} already exists.".format(
+                e.phone_number) for e in queryset]
+            raise serializers.ValidationError(errors)
+
+        if self.instance:
+            for phone_number_data in value:
+                phone_number_data['owner_id'] = self.instance.id
+
+        return value
+
     def create(self, validated_data):
         """Create"""
         self.instance = Person.objects.create(
@@ -134,6 +179,11 @@ class PersonSerializer(serializers.ModelSerializer):
         if emails_data is not None:
             self.fields['emails'].create(
                 self.validate_emails(emails_data))
+
+        phone_numbers_data = validated_data.pop('phone_numbers', None)
+        if phone_numbers_data is not None:
+            self.fields['phone_numbers'].create(
+                self.validate_phone_numbers(phone_numbers_data))
 
         return self.instance
 
@@ -157,5 +207,10 @@ class PersonSerializer(serializers.ModelSerializer):
         if emails_data is not None:
             self.fields['emails'].update(
                 instance.emails.all(), emails_data)
+
+        phone_numbers_data = validated_data.pop('phone_numbers', None)
+        if phone_numbers_data is not None:
+            self.fields['phone_numbers'].update(
+                instance.phone_numbers.all(), phone_numbers_data)
 
         return instance

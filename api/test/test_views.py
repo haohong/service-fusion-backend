@@ -26,6 +26,9 @@ class PersonViewTestCase(APITestCase):
             }],
             'emails': [{
                 'email': 'john.doe@gmail.com'
+            }],
+            'phone_numbers': [{
+                'phone_number': '+12345678910'
             }]
         }
         self.response = self.client.post(
