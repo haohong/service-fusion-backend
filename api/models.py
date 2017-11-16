@@ -19,7 +19,8 @@ class Address(models.Model):
     """
     This class represents address model.
     """
-    owner = models.ForeignKey(Person, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        Person, related_name='addresses', on_delete=models.CASCADE)
     address1 = models.CharField(max_length=128, blank=False)
     address2 = models.CharField(max_length=128, blank=True)
 
@@ -37,7 +38,8 @@ class Email(models.Model):
     """
     This class represents email model.
     """
-    owner = models.ForeignKey(Person, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        Person, related_name='emails', on_delete=models.CASCADE)
     email = models.EmailField(max_length=50, blank=False, unique=True)
 
     def __str__(self):
@@ -48,7 +50,8 @@ class PhoneNumber(models.Model):
     """
     This class represents phone number model
     """
-    owner = models.ForeignKey(Person, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        Person, related_name='phone_numbers', on_delete=models.CASCADE)
     phone_number = PhoneNumberField(blank=False, unique=True)
 
     def __str__(self):
