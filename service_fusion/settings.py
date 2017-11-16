@@ -39,6 +39,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_countries',
+    'phonenumber_field',
+    'api'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -140,3 +144,5 @@ STATICFILES_DIRS = (
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+PHONENUMBER_DEFAULT_REGION = 'US'
