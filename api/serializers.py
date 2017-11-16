@@ -3,8 +3,8 @@ from rest_framework import serializers
 from .models import Person, Address
 
 
-class AddressListSerializer(serializers.ListSerializer):
-    """ListSerializer for Address model."""
+class CustomListSerializer(serializers.ListSerializer):
+    """Custom ListSerializer"""
 
     def create(self, validated_data):
         child_class = self.child.Meta.model
@@ -40,7 +40,7 @@ class AddressListSerializer(serializers.ListSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     """Serializer to map the address model instance into JSON format."""
 
-    id = serializers.IntegerField()  # Making id writable
+    id = serializers.IntegerField(required=False)  # Making id writable
 
     class Meta:
         """Meta class to map serializer's fields with model fields."""
@@ -48,7 +48,7 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
         fields = ('id', 'address1', 'address2', 'city',
                   'state', 'country', 'zip_code')
-        list_serializer_class = AddressListSerializer
+        list_serializer_class = CustomListSerializer
 
 
 class PersonSerializer(serializers.ModelSerializer):
@@ -63,10 +63,6 @@ class PersonSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'last_name',
                   'date_of_birth', 'addresses')
 
-    def __init__(self, *args, **kwargs):
-        kwargs['partial'] = True
-        super(PersonSerializer, self).__init__(*args, **kwargs)
-
     def validate_addresses(self, value):
         """
         Add owner_id fields to addresses data
@@ -79,11 +75,12 @@ class PersonSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create"""
-        addresses_data = validated_data.pop('addresses')
+        addresses_data = validated_data.pop('addresses', None)
         self.instance = Person.objects.create(**validated_data)
 
-        self.fields['addresses'].create(
-            self.validate_addresses(addresses_data))
+        if addresses_data is not None:
+            self.fields['addresses'].create(
+                self.validate_addresses(addresses_data))
 
         return self.instance
 
@@ -94,7 +91,7 @@ class PersonSerializer(serializers.ModelSerializer):
             'first_name', instance.first_name)
         instance.last_name = validated_data.get(
             'last_name', instance.last_name)
-        instance.last_name = validated_data.get(
+        instance.date_of_birth = validated_data.get(
             'date_of_birth', instance.date_of_birth)
         instance.save()
 
