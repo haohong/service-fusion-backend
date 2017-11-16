@@ -16,6 +16,17 @@ class PersonViewTestCase(APITestCase):
             'first_name': 'John',
             'last_name': 'Doe',
             'date_of_birth': '1990-04-15',
+            'addresses': [{
+                'address1': '123 Abc',
+                'address2': '',
+                'city': 'Los Angeles',
+                'state': 'California',
+                'country': 'US',
+                'zip_code': '23432'
+            }],
+            'emails': [{
+                'email': 'john.doe@gmail.com'
+            }]
         }
         self.response = self.client.post(
             reverse('api:person-list'),
@@ -46,7 +57,7 @@ class PersonViewTestCase(APITestCase):
             'last_name': 'Doe',
             'date_of_birth': '1992-03-21',
         }
-        res = self.client.put(
+        res = self.client.patch(
             reverse('api:person-detail', kwargs={'pk': person.id}),
             change_person,
             format='json'

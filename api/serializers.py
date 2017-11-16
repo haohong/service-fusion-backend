@@ -45,7 +45,7 @@ class CustomListSerializer(serializers.ListSerializer):
 
 class AddressSerializer(serializers.ModelSerializer):
     """Serializer to map the address model instance into JSON format."""
-    id = serializers.IntegerField()
+    id = serializers.IntegerField(required=False)
 
     class Meta:
         """Meta class to map serializer's fields with model fields."""
@@ -59,7 +59,7 @@ class AddressSerializer(serializers.ModelSerializer):
 class EmailSerializer(serializers.ModelSerializer):
     """Serializer to map the email model instance into JSON format."""
 
-    id = serializers.IntegerField()
+    id = serializers.IntegerField(required=False)
 
     class Meta:
         """Meta class to map serializer's fields with model fields."""
