@@ -105,14 +105,6 @@ class EmailModelTestCase(TestCase):
         """Test the string representation."""
         self.assertEqual(self.email.__str__(), "{}".format(self.email.email))
 
-    def test_model_email_uniqueness(self):
-        """Test uniqueness of email"""
-        self.email.save()
-
-        with self.assertRaises(IntegrityError):
-            Email.objects.create(owner=self.email_owner,
-                                 email=self.email.email)
-
 
 class PhoneNumberModelTestCase(TestCase):
     """
@@ -143,11 +135,3 @@ class PhoneNumberModelTestCase(TestCase):
         """Test the string representation."""
         self.assertEqual(self.phone_number.__str__(),
                          "{}".format(self.phone_number.phone_number))
-
-    def test_model_phone_number_uniqueness(self):
-        """Test uniqueness of phone_number"""
-        self.phone_number.save()
-
-        with self.assertRaises(IntegrityError):
-            PhoneNumber.objects.create(
-                owner=self.phone_number_owner, phone_number=self.phone_number.phone_number)

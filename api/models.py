@@ -46,7 +46,7 @@ class Email(models.Model):
     """
     owner = models.ForeignKey(
         Person, related_name='emails', on_delete=models.CASCADE)
-    email = models.EmailField(max_length=50, blank=False, unique=True)
+    email = models.EmailField(max_length=50, blank=False)
 
     class Meta:
         ordering = ('id',)
@@ -61,7 +61,7 @@ class PhoneNumber(models.Model):
     """
     owner = models.ForeignKey(
         Person, related_name='phone_numbers', on_delete=models.CASCADE)
-    phone_number = PhoneNumberField(blank=False, unique=True)
+    phone_number = PhoneNumberField(max_length=20, blank=False)
 
     class Meta:
         ordering = ('id',)

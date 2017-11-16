@@ -19,22 +19,39 @@ class CustomListSerializer(serializers.ListSerializer):
         return child_class.objects.bulk_create(children)
 
     def update(self, instance, validated_data):
-        instance.delete()
+        # Maps for id->instance.
+        child_mapping = {child.id: child for child in instance}
 
-        child_class = self.child.Meta.model
+        # Perform creations and updates.
+        ret = []
+        updated_child_ids = []
+        for child_data in validated_data:
+            child_id = child_data.pop('id', None)
+            child = child_mapping.get(child_id, None)
 
-        children = [child_class(**child_data) for child_data in validated_data]
-        return child_class.objects.bulk_create(children)
+            if child is None:
+                ret.append(self.child.create(child_data))
+            else:
+                updated_child_ids.append(child_id)
+                ret.append(self.child.update(child, child_data))
+
+        # Perform deletions.
+        for child_id, child in child_mapping.items():
+            if child_id not in updated_child_ids:
+                child.delete()
+
+        return ret
 
 
 class AddressSerializer(serializers.ModelSerializer):
     """Serializer to map the address model instance into JSON format."""
+    id = serializers.IntegerField()
 
     class Meta:
         """Meta class to map serializer's fields with model fields."""
 
         model = Address
-        fields = ('address1', 'address2', 'city',
+        fields = ('id', 'address1', 'address2', 'city',
                   'state', 'country', 'zip_code',)
         list_serializer_class = CustomListSerializer
 
@@ -42,17 +59,14 @@ class AddressSerializer(serializers.ModelSerializer):
 class EmailSerializer(serializers.ModelSerializer):
     """Serializer to map the email model instance into JSON format."""
 
+    id = serializers.IntegerField()
+
     class Meta:
         """Meta class to map serializer's fields with model fields."""
 
         model = Email
-        fields = ('email',)
+        fields = ('id', 'email',)
         list_serializer_class = CustomListSerializer
-        extra_kwargs = {  # Removing UniqueValidator for custom handling
-            'email': {
-                'validators': [],
-            }
-        }
 
 
 class PersonSerializer(serializers.ModelSerializer):
