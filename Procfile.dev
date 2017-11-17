@@ -1,1 +1,2 @@
-web: gunicorn service_fusion.wsgi --reload --log-file -
+api: gunicorn service_fusion.wsgi --reload --log-file -
+web: cd client && npm start
