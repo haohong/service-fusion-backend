@@ -1,112 +1,113 @@
 <template>
-  <v-app light>
-    <v-navigation-drawer
-      fixed
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      v-model="drawer"
+  <v-app id="inspire">
+    <v-toolbar
+      color="blue darken-3"
+      dark
       app
+      clipped-left
+      fixed
     >
-      <v-list>
-        <v-list-tile
-          v-for="(item, i) in items"
-          :key="i"
-          value="true"
-        >
-          <v-list-tile-action>
-            <v-icon light v-html="item.icon"></v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"></v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-toolbar app>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>web</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>remove</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>menu</v-icon>
-      </v-btn>
+      <v-toolbar-title :style="$vuetify.breakpoint.smAndUp ? 'width: 400px; min-width: 250px' : 'min-width: 72px'" class="ml-0 pl-3">
+        <span class="hidden-xs-only">ServiceFusion Customers</span>
+      </v-toolbar-title>
+      <v-text-field
+        light
+        solo
+        prepend-icon="search"
+        placeholder="Search"
+        style="max-width: 500px; min-width: 128px"
+      ></v-text-field>
     </v-toolbar>
+
     <v-content>
-      <v-container fluid>
-        <v-slide-y-transition mode="out-in">
-          <v-layout column align-center>
-            <img src="/static/v.png" alt="Vuetify.js" class="mb-5" />
-            <blockquote>
-              &#8220;First, solve the problem. Then, write the code.&#8221;
-              <footer>
-                <small>
-                  <em>&mdash;John Johnson</em>
-                </small>
-              </footer>
-            </blockquote>
-          </v-layout>
-        </v-slide-y-transition>
+      <v-container fluid fill-height>
+        <v-layout justify-center align-center>
+        </v-layout>
       </v-container>
     </v-content>
-    <v-navigation-drawer
-      temporary
+
+    <v-btn
+      fab
+      bottom
+      right
+      color="pink"
+      dark
       fixed
-      :right="right"
-      v-model="rightDrawer"
-      app
+      @click.stop="dialog = !dialog"
     >
-      <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon light>compare_arrows</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer :fixed="fixed" app>
-      <span>&copy; 2017</span>
-    </v-footer>
+      <v-icon>add</v-icon>
+    </v-btn>
+
+    <v-dialog v-model="dialog" width="800px">
+      <v-card>
+        <v-card-title
+          class="grey lighten-4 py-4 title"
+        >
+          Create contact
+        </v-card-title>
+        <v-container grid-list-sm class="pa-4">
+          <v-layout row wrap>
+            <v-flex xs12 align-center justify-space-between>
+              <v-layout align-center>
+                <v-avatar size="40px" class="mr-3">
+                  <img
+                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                    alt=""
+                  >
+                </v-avatar>
+                <v-text-field
+                  placeholder="Name"
+                ></v-text-field>
+              </v-layout>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                prepend-icon="business"
+                placeholder="Company"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                placeholder="Job title"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12>
+              <v-text-field
+                prepend-icon="mail"
+                placeholder="Email"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12>
+              <v-text-field
+                type="tel"
+                prepend-icon="phone"
+                placeholder="(000) 000 - 0000"
+                mask="phone"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12>
+              <v-text-field
+                prepend-icon="notes"
+                placeholder="Notes"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+        </v-container>
+        <v-card-actions>
+          <v-btn flat color="primary">More</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
+          <v-btn flat @click="dialog = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        clipped: false,
-        drawer: true,
-        fixed: false,
-        items: [{
-          icon: 'bubble_chart',
-          title: 'Inspire'
-        }],
-        miniVariant: false,
-        right: true,
-        rightDrawer: false,
-        title: 'Vuetify.js'
-      }
-    }
-  }
-
+export default {
+  data: () => ({
+    dialog: false
+  })
+}
 </script>
