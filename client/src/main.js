@@ -5,6 +5,8 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.css'
 
+import store from './store'
+
 import App from './App'
 import CustomerList from './components/CustomerList'
 import CustomerView from './components/CustomerView'
@@ -22,7 +24,11 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   template: '<App/>',
-  components: { App }
+  components: { App },
+  beforeMount: function() {
+    this.$store.dispatch('getCustomers')
+  }
 })
