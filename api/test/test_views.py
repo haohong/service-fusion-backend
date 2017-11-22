@@ -32,7 +32,7 @@ class PersonViewTestCase(APITestCase):
             }]
         }
         self.response = self.client.post(
-            reverse('api:person-list'),
+            reverse('api:customer-list'),
             self.person_data,
             format='json')
 
@@ -44,7 +44,7 @@ class PersonViewTestCase(APITestCase):
         """Test the api can get a given person."""
         person = Person.objects.get()
         response = self.client.get(
-            reverse('api:person-detail', kwargs={'pk': person.id}),
+            reverse('api:customer-detail', kwargs={'pk': person.id}),
             format='json'
         )
 
@@ -61,7 +61,7 @@ class PersonViewTestCase(APITestCase):
             'date_of_birth': '1992-03-21',
         }
         res = self.client.patch(
-            reverse('api:person-detail', kwargs={'pk': person.id}),
+            reverse('api:customer-detail', kwargs={'pk': person.id}),
             change_person,
             format='json'
         )
@@ -72,7 +72,7 @@ class PersonViewTestCase(APITestCase):
         """Test the api can delete a person."""
         person = Person.objects.get()
         response = self.client.delete(
-            reverse('api:person-detail', kwargs={'pk': person.id}),
+            reverse('api:customer-detail', kwargs={'pk': person.id}),
             format='json',
             follow=True
         )
