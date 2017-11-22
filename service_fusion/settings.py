@@ -149,6 +149,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 PHONENUMBER_DEFAULT_REGION = 'US'
 
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.PageNumberPaginationWithPageSizeAndCount',
+    'PAGE_SIZE': 5,
     'DATE_FORMAT': '%Y-%m-%d',
     'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%SZ',
 }
