@@ -7,12 +7,14 @@ import 'vuetify/dist/vuetify.css'
 
 import App from './App'
 import CustomerList from './components/CustomerList'
+import CustomerView from './components/CustomerView'
 import CustomerForm from './components/CustomerForm'
 import router from './router'
 
 Vue.use(Vuetify)
 
 Vue.component('CustomerList', CustomerList)
+Vue.component('CustomerView', CustomerView)
 Vue.component('CustomerForm', CustomerForm)
 
 Vue.config.productionTip = false
