@@ -101,7 +101,7 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="close">Close</v-btn>
+      <v-btn @click.native="close">Close</v-btn>
     </v-card-actions>
   </v-card>
 </template>

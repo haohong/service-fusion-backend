@@ -21,3 +21,7 @@ export const getCustomers = params => {
 
   return client.get(`customers/?${paramsString}`)
 }
+
+export const deleteCustomer = id => {
+  return client.delete(`customers/${id}/`)
+}

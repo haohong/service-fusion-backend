@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import unionBy from 'lodash/unionBy'
-import remove from 'lodash/remove'
 import cloneDeep from 'lodash/cloneDeep'
 
 import * as api from '@/api'
@@ -74,11 +73,6 @@ const mutations = {
   },
   EDIT_CUSTOMER(state, payload) {
     state.customers = unionBy([payload], state.customers, 'id')
-  },
-  DELETE_CUSTOMER(state, payload) {
-    remove(state.customers, function(customer) {
-      return customer.id === payload.id
-    })
   },
   LOADING(state) {
     state.status = {
@@ -202,21 +196,21 @@ const actions = {
         commit('ERROR', e)
       })
   },
-  deleteCustomer(context, payload) {
-    context.commit('LOADING')
+  deleteCustomer({ commit, dispatch }, payload) {
+    commit('LOADING')
 
     api
       .deleteCustomer(payload)
       .then(res => {
-        if (res.status === 200) {
-          context.commit('DELETE_CUSTOMER', payload)
-          context.commit('SUCCESS')
+        if (res.status === 204) {
+          commit('SUCCESS')
+          dispatch('getCustomers')
         } else {
-          context.commit('ERROR', res)
+          commit('ERROR', res)
         }
       })
-      .then(e => {
-        context.commit('ERROR', e)
+      .catch(e => {
+        commit('ERROR', e)
       })
   },
   clearError({ commit }) {
