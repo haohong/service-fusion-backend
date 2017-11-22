@@ -32,6 +32,10 @@
         </ul>
         <i v-else>No address</i>
       </td>
+      <td>
+        <v-btn small color="primary" @click="viewCustomer(index)">View</v-btn>
+        <v-btn small color="error" @click="deleteCustomer(index)">Delete</v-btn>
+      </td>
     </template>
   </v-data-table>
 </template>
@@ -72,6 +76,11 @@ export default {
           text: 'Address(es)',
           align: 'left',
           value: 'address'
+        },
+        {
+          text: 'Actions',
+          align: 'left',
+          value: 'actions'
         }
       ],
       customers: [
@@ -113,6 +122,15 @@ export default {
           ]
         }
       ]
+    }
+  },
+
+  methods: {
+    viewCustomer(index) {
+      console.log('view', index)
+    },
+    deleteCustomer(index) {
+      console.log('delete', index)
     }
   }
 }
