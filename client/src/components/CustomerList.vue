@@ -1,12 +1,14 @@
 <template>
   <div>
     <v-data-table
-        :headers="headers"
-        :items="customers"
-        no-data-text="No customers"
-        no-results-text="No customers found"
-        class="elevation-1"
-      >
+      :headers="headers"
+      :items="customers"
+      :total-items="total"
+      :pagination.sync="pagination"
+      no-data-text="No customers"
+      no-results-text="No customers found"
+      class="elevation-1"
+    >
       <template slot="items" slot-scope="{ item, index }">
         <td>{{ item.first_name }}</td>
         <td>{{ item.last_name }}</td>
@@ -40,13 +42,14 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="dialog" width="800px" persistent>
+    <!-- <v-dialog v-model="dialog" width="800px" persistent>
       <customer-view :customer="selectedCustomer" @close="closeCustomer"/>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import utils from '@/mixins/utils'
 
 export default {
@@ -57,83 +60,43 @@ export default {
         {
           text: 'First Name',
           align: 'left',
-          value: 'first_name'
+          value: 'first_name',
+          sortable: false
         },
         {
           text: 'Last Name',
           align: 'left',
-          value: 'last_name'
+          value: 'last_name',
+          sortable: false
         },
         {
           text: 'Date of Birth',
-          value: 'date_of_birth'
+          value: 'date_of_birth',
+          sortable: false
         },
         {
           text: 'Email(s)',
           align: 'left',
-          value: 'email'
+          value: 'email',
+          sortable: false
         },
         {
           text: 'Phone Number(s)',
           align: 'left',
-          value: 'phone_number'
+          value: 'phone_number',
+          sortable: false
         },
         {
           text: 'Address(es)',
           align: 'left',
-          value: 'address'
+          value: 'address',
+          sortable: false
         },
         {
           text: 'Actions',
           align: 'left',
-          value: 'actions'
-        }
-      ],
-      customers: [
-        {
-          first_name: 'Haohong',
-          last_name: 'Xu',
-          date_of_birth: '1990-02-17',
-          addresses: [
-            {
-              id: 2,
-              address1: '123, Abc',
-              address2: '',
-              city: 'Los Angeles',
-              state: 'California',
-              country: 'US',
-              zip_code: '23432'
-            },
-            {
-              id: 3,
-              address1: '123, Abc',
-              address2: '',
-              city: 'Los Angeles',
-              state: 'California',
-              country: 'US',
-              zip_code: '23432'
-            }
-          ],
-          emails: [
-            {
-              id: 15,
-              email: 'haohong1234@gmail.com'
-            },
-            {
-              id: 16,
-              email: 'haohong1234@gmail.com'
-            }
-          ],
-          phone_numbers: [
-            {
-              id: 4,
-              phone_number: '+12345678911'
-            },
-            {
-              id: 3,
-              phone_number: '+12345678911'
-            }
-          ]
+          value: 'actions',
+          sortable: false
         }
       ],
       dialog: false,
@@ -142,12 +105,35 @@ export default {
   },
 
   computed: {
-    selectedCustomer() {
-      return this.selectedCustomerId >= 0 &&
-        this.selectedCustomerId < this.customers.length
-        ? this.customers[this.selectedCustomerId]
-        : null
-    }
+    success: {
+      get: function() {
+        return this.$store.state.status.success
+      },
+      set: function(value) {
+        this.clearError()
+      }
+    },
+    error: {
+      get: function() {
+        return this.$store.state.status.error
+      },
+      set: function(value) {
+        this.clearError()
+      }
+    },
+    pagination: {
+      get: function() {
+        return this.$store.state.pagination
+      },
+      set: function(payload) {
+        this.paginate(payload)
+      }
+    },
+    ...mapGetters(['customers', 'total', 'loading', 'editForm', 'page'])
+  },
+
+  mounted() {
+    this.getCustomers()
   },
 
   methods: {
@@ -161,7 +147,8 @@ export default {
     },
     deleteCustomer(index) {
       console.log('delete', index)
-    }
+    },
+    ...mapActions(['getCustomers', 'clearError', 'paginate'])
   }
 }
 </script>

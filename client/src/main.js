@@ -27,8 +27,5 @@ new Vue({
   store,
   router,
   template: '<App/>',
-  components: { App },
-  beforeMount: function() {
-    this.$store.dispatch('getCustomers')
-  }
+  components: { App }
 })

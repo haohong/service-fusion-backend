@@ -15,8 +15,10 @@ const state = {
   editForm: false,
   editting: false,
   pagination: {
+    sortBy: '',
     page: 1,
-    page_size: 12
+    rowsPerPage: 5,
+    descending: false
   },
   total: 0
 }
@@ -101,16 +103,19 @@ const mutations = {
     state.editting = !state.editting
   },
   PAGINATE(state, payload) {
-    state.pagination.page = payload
+    state.pagination = payload
   }
 }
 
 const actions = {
-  getCustomers({ commit, getters }) {
+  getCustomers({ commit, getters: { pagination } }) {
     commit('LOADING')
 
     api
-      .getCustomers(getters.pagination)
+      .getCustomers({
+        page: pagination.page,
+        page_size: pagination.rowsPerPage
+      })
       .then(res => {
         commit('SET_CUSTOMERS', res.data.results)
         commit('SET_TOTAL', res.data.count)
@@ -119,7 +124,7 @@ const actions = {
       .catch(e => {
         commit('ERROR', e)
       })
-  }
+  },
   // editCustomer(context, payload) {
   //   context.commit('LOADING')
 
@@ -160,10 +165,10 @@ const actions = {
   // toggleEditting(context) {
   //   context.commit('TOGGLE_EDITTING')
   // },
-  // paginate(context, payload) {
-  //   context.commit('PAGINATE', payload)
-  //   context.dispatch('getCustomers')
-  // }
+  paginate({ commit, dispatch }, payload) {
+    commit('PAGINATE', payload)
+    dispatch('getCustomers')
+  }
 }
 
 export default new Vuex.Store({

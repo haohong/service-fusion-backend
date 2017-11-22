@@ -16,8 +16,8 @@ const formatParams = params => {
   )
 }
 
-export const getCustomers = ({ filters }) => {
-  const params = formatParams(filters)
+export const getCustomers = params => {
+  const paramsString = formatParams(params)
 
-  return client.get(`customers/?${params}`)
+  return client.get(`customers/?${paramsString}`)
 }
