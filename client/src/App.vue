@@ -20,9 +20,8 @@
     </v-toolbar>
 
     <v-content>
-      <v-container fluid fill-height>
-        <v-layout justify-center align-center>
-        </v-layout>
+      <v-container fluid>
+        <customer-list />
       </v-container>
     </v-content>
 
