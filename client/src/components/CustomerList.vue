@@ -40,7 +40,7 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="viewDialogOpened" width="800px" persistent>
+    <v-dialog v-model="dialog" width="800px" persistent>
       <customer-view :customer="selectedCustomer" @close="closeCustomer"/>
     </v-dialog>
   </div>
@@ -136,7 +136,7 @@ export default {
           ]
         }
       ],
-      viewDialogOpened: false,
+      dialog: false,
       selectedCustomerId: null
     }
   },
@@ -152,11 +152,11 @@ export default {
 
   methods: {
     viewCustomer(index) {
-      this.viewDialogOpened = true
+      this.dialog = true
       this.selectedCustomerId = index
     },
     closeCustomer() {
-      this.viewDialogOpened = false
+      this.dialog = false
       this.selectedCustomerId = null
     },
     deleteCustomer(index) {

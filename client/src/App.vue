@@ -37,8 +37,8 @@
       <v-icon>add</v-icon>
     </v-btn>
 
-    <v-dialog v-model="dialog" width="800px">
-      <customer-form :customer="customer" />
+    <v-dialog v-model="dialog" width="1000px" persistent>
+      <customer-form :customer="customer" @cancel="cancelAdd"/>
     </v-dialog>
   </v-app>
 </template>
@@ -48,6 +48,14 @@ export default {
   data: () => ({
     dialog: false,
     customer: {}
-  })
+  }),
+  methods: {
+    addCustomer() {
+      this.dialog = true
+    },
+    cancelAdd() {
+      this.dialog = false
+    }
+  }
 }
 </script>

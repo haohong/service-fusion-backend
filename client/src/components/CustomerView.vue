@@ -5,13 +5,14 @@
     >
       Customer Details
     </v-card-title>
+
     <v-container grid-list-sm class="pa-4">
 
       <v-layout row>
         <v-flex xs3>
           <v-subheader>Name</v-subheader>
         </v-flex>
-        <v-flex xs12 sm9 class="ml-3 mt-2">
+        <v-flex xs9 class="ml-3 mt-2">
           <v-layout align-center>
             <v-avatar size="40px" class="mr-3">
               <v-icon medium>account_circle</v-icon>
@@ -25,7 +26,7 @@
         <v-flex xs3>
           <v-subheader>Date of Birth</v-subheader>
         </v-flex>
-        <v-flex xs12 sm9 class="ml-3 mt-2">
+        <v-flex xs9 class="ml-3 mt-2">
           <v-layout align-center>
             <v-avatar size="40px" class="mr-3">
               <v-icon medium>perm_contact_calendar</v-icon>
@@ -39,7 +40,7 @@
         <v-flex xs3>
           <v-subheader>Email(s)</v-subheader>
         </v-flex>
-        <v-flex xs12 sm9 class="ml-3 mt-2">
+        <v-flex xs9 class="ml-3 mt-2">
           <div v-if="customer.emails && customer.emails.length">
             <v-layout v-for="{email, id} in customer.emails" align-center :key="id">
               <v-avatar size="40px" class="mr-3">
@@ -58,7 +59,7 @@
         <v-flex xs3>
           <v-subheader>Phone Number(s)</v-subheader>
         </v-flex>
-        <v-flex xs12 sm9 class="ml-3 mt-2">
+        <v-flex xs9 class="ml-3 mt-2">
           <div v-if="customer.phone_numbers && customer.phone_numbers.length">
             <v-layout v-for="{phone_number, id} in customer.phone_numbers" align-center :key="id">
               <v-avatar size="40px" class="mr-3">
@@ -77,7 +78,7 @@
         <v-flex xs3>
           <v-subheader>Address(es)</v-subheader>
         </v-flex>
-        <v-flex xs12 sm9 class="ml-3 mt-2">
+        <v-flex xs9 class="ml-3 mt-2">
           <div v-if="customer.addresses && customer.addresses.length">
             <v-layout row
               v-for="address in customer.addresses"
@@ -100,7 +101,7 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn flat color="primary" @click="close">Close</v-btn>
+      <v-btn @click="close">Close</v-btn>
     </v-card-actions>
   </v-card>
 </template>
