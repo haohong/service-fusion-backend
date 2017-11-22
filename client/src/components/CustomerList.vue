@@ -5,11 +5,12 @@
       :items="customers"
       :total-items="total"
       :pagination.sync="pagination"
+      :loading="loading"
       no-data-text="No customers"
       no-results-text="No customers found"
       class="elevation-1"
     >
-      <template slot="items" slot-scope="{ item, index }">
+      <template slot="items" slot-scope="{ item }">
         <td>{{ item.first_name }}</td>
         <td>{{ item.last_name }}</td>
         <td class="text-xs-right">{{ item.date_of_birth }}</td>
@@ -36,15 +37,15 @@
           <i v-else>No address</i>
         </td>
         <td>
-          <v-btn small color="primary" @click="viewCustomer(index)">View</v-btn>
-          <v-btn small color="error" @click="deleteCustomer(index)">Delete</v-btn>
+          <v-btn small color="primary" @click="openViewDialog(item)">View</v-btn>
+          <v-btn small color="error" @click="deleteCustomer(item)">Delete</v-btn>
         </td>
       </template>
     </v-data-table>
 
-    <!-- <v-dialog v-model="dialog" width="800px" persistent>
-      <customer-view :customer="selectedCustomer" @close="closeCustomer"/>
-    </v-dialog> -->
+    <v-dialog v-model="viewForm" width="800px" persistent>
+      <customer-view :customer="selectedCustomer" @close="closeViewDialog"/>
+    </v-dialog>
   </div>
 </template>
 
@@ -99,8 +100,7 @@ export default {
           sortable: false
         }
       ],
-      dialog: false,
-      selectedCustomerId: null
+      selectedCustomer: {}
     }
   },
 
@@ -129,7 +129,7 @@ export default {
         this.paginate(payload)
       }
     },
-    ...mapGetters(['customers', 'total', 'loading', 'editForm', 'page'])
+    ...mapGetters(['customers', 'total', 'loading', 'viewForm', 'editForm'])
   },
 
   mounted() {
@@ -137,18 +137,17 @@ export default {
   },
 
   methods: {
-    viewCustomer(index) {
-      this.dialog = true
-      this.selectedCustomerId = index
+    openViewDialog(customer) {
+      this.selectedCustomer = customer
+      this.setViewForm(true)
     },
-    closeCustomer() {
-      this.dialog = false
-      this.selectedCustomerId = null
+    closeViewDialog() {
+      this.setViewForm(false)
     },
-    deleteCustomer(index) {
-      console.log('delete', index)
+    deleteCustomer(customer) {
+      console.log('delete', customer)
     },
-    ...mapActions(['getCustomers', 'clearError', 'paginate'])
+    ...mapActions(['getCustomers', 'clearError', 'paginate', 'setViewForm'])
   }
 }
 </script>
