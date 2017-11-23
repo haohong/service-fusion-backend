@@ -9,18 +9,12 @@ export default {
         phoneNumber: value => {
           const regex = /^(\+\d{1,3})?\d{7,10}$/
 
-          return (
-            (!!value && value.length >= 7 && regex.test(value)) ||
-            'Invalid phone number'
-          )
+          return (!!value && regex.test(value)) || 'Invalid phone number'
         },
         zipCode: value => {
           const regex = /^\d{4,9}$/
 
-          return (
-            (!!value && value.length >= 7 && regex.test(value)) ||
-            'Invalid zip code'
-          )
+          return (!!value && regex.test(value)) || 'Invalid zip code'
         },
         maxLength: max => value =>
           (!!value && value.length <= max) ||

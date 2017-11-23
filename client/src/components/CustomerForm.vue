@@ -14,6 +14,8 @@
 
       <v-card-text style="height: 600px">
 
+        <v-progress-linear v-show="loading" height="2" :indeterminate="true"></v-progress-linear>
+
         <v-layout row>
           <v-flex xs2>
             <v-subheader>Name</v-subheader>
@@ -227,11 +229,12 @@
 
     <v-snackbar :timeout="3000" v-model="formError" top color="error" absolute>
       <ul>
-        <li v-for="(fe, index) in formErrors" :key="index">
-          {{ fe }}
+        <li v-for="(formError, index) in formErrors" :key="index">
+          {{ formError }}
         </li>
       </ul>
     </v-snackbar>
+
   </v-card>
 
 </template>
@@ -285,7 +288,9 @@ export default {
         return
       }
 
-      console.log(this.customerModel)
+      this.editting
+        ? this.editCustomer(this.customerModel)
+        : this.addCustomer(this.customerModel)
     },
     cancel() {
       this.setEditForm(false)

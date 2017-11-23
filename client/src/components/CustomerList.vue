@@ -58,20 +58,12 @@
     </v-data-table>
 
     <v-dialog v-model="viewForm" width="800px" persistent>
-      <customer-view :customer="selectedCustomer" />
+      <customer-view />
     </v-dialog>
 
     <v-dialog v-model="editForm" width="1000px" scrollable persistent>
       <customer-form />
     </v-dialog>
-
-    <v-snackbar :timeout="2000" color="success" v-model="success">
-      Request done successfully!
-    </v-snackbar>
-
-    <v-snackbar :timeout="3000" color="error" v-model="error">
-      There was an error during request!
-    </v-snackbar>
   </div>
 </template>
 
@@ -126,28 +118,11 @@ export default {
           value: 'actions',
           sortable: false
         }
-      ],
-      selectedCustomer: {}
+      ]
     }
   },
 
   computed: {
-    success: {
-      get: function() {
-        return this.$store.state.status.success
-      },
-      set: function(value) {
-        this.clearError()
-      }
-    },
-    error: {
-      get: function() {
-        return this.$store.state.status.error
-      },
-      set: function(value) {
-        this.clearError()
-      }
-    },
     pagination: {
       get: function() {
         return this.$store.state.pagination
@@ -175,7 +150,7 @@ export default {
       this.setEditForm(true)
     },
     openViewDialog(customer) {
-      this.selectedCustomer = customer
+      this.setCustomer(customer)
       this.setViewForm(true)
     },
     deleteCustomer(id) {
@@ -186,7 +161,6 @@ export default {
     ...mapActions([
       'getCustomers',
       'paginate',
-      'clearError',
       'setCustomerDefault',
       'setCustomer',
       'setViewForm',

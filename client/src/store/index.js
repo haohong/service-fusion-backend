@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import unionBy from 'lodash/unionBy'
 import cloneDeep from 'lodash/cloneDeep'
 import * as CountryList from 'country-list'
 
@@ -72,12 +71,6 @@ const mutations = {
   },
   SET_CUSTOMER(state, payload) {
     state.customer = payload
-  },
-  ADD_CUSTOMER(state, payload) {
-    state.customers.unshift(payload)
-  },
-  EDIT_CUSTOMER(state, payload) {
-    state.customers = unionBy([payload], state.customers, 'id')
   },
   LOADING(state) {
     state.status = {
@@ -182,32 +175,37 @@ const actions = {
   setCustomerDefault({ commit }) {
     commit('SET_CUSTOMER_DEFAULT')
   },
-  addCustomer({ commit }, payload) {
+  addCustomer({ commit, dispatch }, payload) {
     commit('LOADING')
 
     api
       .addCustomer(payload)
-      .then(customer => {
-        commit('ADD_CUSTOMER', customer)
-        commit('SET_CUSTOMER_DEFAULT')
-        commit('TOGGLE_EDITFORM', false)
+      .then(res => {
         commit('SUCCESS')
+
+        commit('TOGGLE_EDITFORM', false)
+        commit('SET_CUSTOMER', res.data)
+        commit('TOGGLE_VIEWFORM', true)
+
+        dispatch('getCustomers')
       })
       .catch(e => {
         commit('ERROR', e)
       })
   },
-  editCustomer({ commit }, payload) {
+  editCustomer({ commit, dispatch }, payload) {
     commit('LOADING')
 
     api
       .editCustomer(payload)
-      .then(customer => {
-        commit('EDIT_CUSTOMER', customer)
-        commit('SET_CUSTOMER_DEFAULT')
-        commit('TOGGLE_EDITTING', false)
-        commit('TOGGLE_EDITFORM', false)
+      .then(res => {
         commit('SUCCESS')
+
+        commit('TOGGLE_EDITFORM', false)
+        commit('SET_CUSTOMER', res.data)
+        commit('TOGGLE_VIEWFORM', true)
+
+        dispatch('getCustomers')
       })
       .catch(e => {
         commit('ERROR', e)
@@ -221,6 +219,7 @@ const actions = {
       .then(res => {
         if (res.status === 204) {
           commit('SUCCESS')
+
           dispatch('getCustomers')
         } else {
           commit('ERROR', res)

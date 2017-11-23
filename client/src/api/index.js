@@ -22,6 +22,14 @@ export const getCustomers = params => {
   return client.get(`customers/?${paramsString}`)
 }
 
+export const addCustomer = payload => {
+  return client.post('customers/', payload)
+}
+
+export const editCustomer = payload => {
+  return client.patch(`customers/${payload.id}/`, payload)
+}
+
 export const deleteCustomer = id => {
   return client.delete(`customers/${id}/`)
 }

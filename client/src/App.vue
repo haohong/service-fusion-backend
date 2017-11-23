@@ -25,22 +25,41 @@
       </v-container>
     </v-content>
 
+    <v-snackbar :timeout="2000" color="success" v-model="success">
+      Request done successfully!
+    </v-snackbar>
+
+    <v-snackbar :timeout="3000" color="error" v-model="error">
+      There was an error during request!
+    </v-snackbar>
+
   </v-app>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  data: () => ({
-    dialog: false,
-    customer: {}
-  }),
-  methods: {
-    addCustomer() {
-      this.dialog = true
+  computed: {
+    success: {
+      get: function() {
+        return this.$store.state.status.success
+      },
+      set: function(value) {
+        this.clearError()
+      }
     },
-    cancelAdd() {
-      this.dialog = false
+    error: {
+      get: function() {
+        return !!this.$store.state.status.error
+      },
+      set: function(value) {
+        this.clearError()
+      }
     }
+  },
+  methods: {
+    ...mapActions(['clearError'])
   }
 }
 </script>

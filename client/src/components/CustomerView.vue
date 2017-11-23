@@ -107,20 +107,16 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import utils from '@/mixins/utils'
 
 export default {
   mixins: [utils],
-  data() {
-    return {}
-  },
-  props: {
-    customer: {
-      type: Object,
-      default: () => ({})
-    }
+  computed: {
+    ...mapGetters({
+      customer: 'customerModel'
+    })
   },
   methods: {
     close() {
