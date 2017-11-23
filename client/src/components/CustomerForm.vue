@@ -265,6 +265,14 @@ export default {
     },
     ...mapGetters(['customerModel', 'countries', 'editting', 'loading'])
   },
+  watch: {
+    editting: function(editting) {
+      // If new form, reset the form
+      if (!editting) {
+        this.$refs.form.reset()
+      }
+    }
+  },
   methods: {
     validateAtFormLevel() {
       this.formErrors = []

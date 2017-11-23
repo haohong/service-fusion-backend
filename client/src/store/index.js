@@ -129,16 +129,8 @@ const mutations = {
   },
   SET_CUSTOMER_DEFAULT(state) {
     state.customer = {
-      emails: [
-        {
-          email: ''
-        }
-      ],
-      phone_numbers: [
-        {
-          phone_number: ''
-        }
-      ],
+      emails: [{}],
+      phone_numbers: [{}],
       addresses: []
     }
   },
