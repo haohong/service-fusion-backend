@@ -134,10 +134,6 @@ export default {
     ...mapGetters(['customers', 'total', 'loading', 'viewForm', 'editForm'])
   },
 
-  mounted() {
-    this.getCustomers()
-  },
-
   methods: {
     openAddForm() {
       this.setCustomerDefault()
