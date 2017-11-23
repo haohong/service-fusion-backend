@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import unionBy from 'lodash/unionBy'
 import cloneDeep from 'lodash/cloneDeep'
+import * as CountryList from 'country-list'
 
 import * as api from '@/api'
 
@@ -19,6 +20,7 @@ const state = {
     phone_numbers: [],
     addresses: []
   },
+  countries: CountryList().getData(),
   viewForm: false,
   editForm: false,
   editting: false,
@@ -40,6 +42,9 @@ const getters = {
   },
   customerModel(state) {
     return state.customer
+  },
+  countries(state) {
+    return state.countries
   },
   loading(state) {
     return state.status.loading
@@ -108,8 +113,8 @@ const mutations = {
   TOGGLE_EDITFORM(state, payload) {
     state.editForm = payload
   },
-  TOGGLE_EDITTING(state) {
-    state.editting = !state.editting
+  TOGGLE_EDITTING(state, payload) {
+    state.editting = payload
   },
   ADD_CUSTOMER_EMAIL(state, payload) {
     state.customer.emails.push(payload)
@@ -131,8 +136,16 @@ const mutations = {
   },
   SET_CUSTOMER_DEFAULT(state) {
     state.customer = {
-      emails: [],
-      phone_numbers: [],
+      emails: [
+        {
+          email: ''
+        }
+      ],
+      phone_numbers: [
+        {
+          phone_number: ''
+        }
+      ],
       addresses: []
     }
   },
@@ -142,6 +155,10 @@ const mutations = {
 }
 
 const actions = {
+  paginate({ commit, dispatch }, payload) {
+    commit('PAGINATE', payload)
+    dispatch('getCustomers')
+  },
   getCustomers({ commit, getters: { pagination } }) {
     commit('LOADING')
 
@@ -188,7 +205,7 @@ const actions = {
       .then(customer => {
         commit('EDIT_CUSTOMER', customer)
         commit('SET_CUSTOMER_DEFAULT')
-        commit('TOGGLE_EDITTING')
+        commit('TOGGLE_EDITTING', false)
         commit('TOGGLE_EDITFORM', false)
         commit('SUCCESS')
       })
@@ -222,12 +239,26 @@ const actions = {
   setEditForm({ commit }, payload) {
     commit('TOGGLE_EDITFORM', payload)
   },
-  toggleEditting({ commit }) {
-    commit('TOGGLE_EDITTING')
+  setEditting({ commit }, payload) {
+    commit('TOGGLE_EDITTING', payload)
   },
-  paginate({ commit, dispatch }, payload) {
-    commit('PAGINATE', payload)
-    dispatch('getCustomers')
+  addCustomerEmail(context, payload) {
+    context.commit('ADD_CUSTOMER_EMAIL', payload)
+  },
+  removeCustomerEmail(context, payload) {
+    context.commit('REMOVE_CUSTOMER_EMAIL', payload)
+  },
+  addCustomerPhoneNumber(context, payload) {
+    context.commit('ADD_CUSTOMER_PHONE_NUMBER', payload)
+  },
+  removeCustomerPhoneNumber(context, payload) {
+    context.commit('REMOVE_CUSTOMER_PHONE_NUMBER', payload)
+  },
+  addCustomerAddress(context, payload) {
+    context.commit('ADD_CUSTOMER_ADDRESS', payload)
+  },
+  removeCustomerAddress(context, payload) {
+    context.commit('REMOVE_CUSTOMER_ADDRESS', payload)
   }
 }
 

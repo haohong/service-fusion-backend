@@ -25,21 +25,6 @@
       </v-container>
     </v-content>
 
-    <v-btn
-      fab
-      bottom
-      right
-      color="pink"
-      dark
-      fixed
-      @click.stop="dialog = !dialog"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
-
-    <v-dialog v-model="dialog" width="1000px" persistent>
-      <customer-form :customer="customer" @cancel="cancelAdd"/>
-    </v-dialog>
   </v-app>
 </template>
 

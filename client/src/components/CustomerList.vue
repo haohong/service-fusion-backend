@@ -1,5 +1,18 @@
 <template>
   <div>
+    <v-btn
+      fab
+      bottom
+      right
+      color="pink"
+      dark
+      fixed
+      :disabled="loading"
+      @click.stop="openAddForm"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>
+
     <v-data-table
       :headers="headers"
       :items="customers"
@@ -38,18 +51,24 @@
         </td>
         <td>
           <v-btn small color="primary" @click="openViewDialog(item)">View</v-btn>
+          <v-btn small color="warning" @click="openEditForm(item)">Edit</v-btn>
           <v-btn small color="error" @click="deleteCustomer(item.id)">Delete</v-btn>
         </td>
       </template>
     </v-data-table>
 
     <v-dialog v-model="viewForm" width="800px" persistent>
-      <customer-view :customer="selectedCustomer" @close="closeViewDialog"/>
+      <customer-view :customer="selectedCustomer" />
+    </v-dialog>
+
+    <v-dialog v-model="editForm" width="1000px" scrollable persistent>
+      <customer-form />
     </v-dialog>
 
     <v-snackbar :timeout="2000" success v-model="success">
       Request done successfully!
     </v-snackbar>
+
     <v-snackbar :timeout="3000" error v-model="error">
       There was an error during request!
     </v-snackbar>
@@ -145,22 +164,35 @@ export default {
   },
 
   methods: {
+    openAddForm() {
+      this.setCustomerDefault()
+      this.setEditting(false)
+      this.setEditForm(true)
+    },
+    openEditForm(customer) {
+      this.setCustomer(customer)
+      this.setEditting(true)
+      this.setEditForm(true)
+    },
     openViewDialog(customer) {
       this.selectedCustomer = customer
       this.setViewForm(true)
-    },
-    closeViewDialog() {
-      this.setViewForm(false)
     },
     deleteCustomer(id) {
       if (confirm('Are you sure to remove this customer?')) {
         this.$store.dispatch('deleteCustomer', id)
       }
     },
-    confirm(title, text) {
-      return new Promise((resolve, reject) => {})
-    },
-    ...mapActions(['getCustomers', 'paginate', 'clearError', 'setViewForm'])
+    ...mapActions([
+      'getCustomers',
+      'paginate',
+      'clearError',
+      'setCustomerDefault',
+      'setCustomer',
+      'setViewForm',
+      'setEditForm',
+      'setEditting'
+    ])
   }
 }
 </script>

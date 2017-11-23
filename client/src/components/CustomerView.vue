@@ -107,6 +107,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import utils from '@/mixins/utils'
 
 export default {
@@ -122,8 +124,9 @@ export default {
   },
   methods: {
     close() {
-      this.$emit('close')
-    }
+      this.setViewForm(false)
+    },
+    ...mapActions(['setViewForm'])
   }
 }
 </script>
