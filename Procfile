@@ -1,1 +1,1 @@
-api: gunicorn service_fusion.wsgi --log-file -
+web: gunicorn service_fusion.wsgi --log-file -
