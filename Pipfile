@@ -15,6 +15,7 @@ djangorestframework = "*"
 django-countries = "*"
 django-phonenumber-field = "*"
 django-cors-headers = "*"
+phonenumbers = "*"
 
 
 [requires]

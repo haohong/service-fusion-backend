@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3fa6071b5a594531b0ffd69ed9ef0ffefd660d4b1182b61676bb3c37df83ab04"
+            "sha256": "669d8a434bbb7e30e084623a48672f66b8f6e1c11a47572e6b222a04a96fd10c"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -82,6 +82,13 @@
                 "sha256:eee1169f0ca667be05db3351a0960765620dad53f53434262ff8901b68a1b622"
             ],
             "version": "==19.7.1"
+        },
+        "phonenumbers": {
+            "hashes": [
+                "sha256:3a8222aeb9d75cdbbc5b51b4c5229a81fa0a5f1698c5446019f83dc50274cad0",
+                "sha256:ab1fa853350dde91be672192b427169b29e3348c236e46ad7a757e4ac8163c8c"
+            ],
+            "version": "==8.8.6"
         },
         "psycopg2": {
             "hashes": [
