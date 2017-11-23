@@ -1,6 +1,11 @@
 <template>
   <v-card>
-    <v-form @submit.prevent="submit">
+    <v-form
+      v-model="formValid"
+      ref="form"
+      lazy-validation
+      @submit.prevent="submit"
+    >
       <v-card-title
         class="grey lighten-4 py-4 title"
       >
@@ -18,19 +23,19 @@
               <v-flex xs7>
                 <v-text-field
                   type="text"
-                  name="first_name"
                   label="First Name"
                   v-model="customerModel.first_name"
                   prepend-icon="account_circle"
+                  :rules="[rules.required]"
                   required
                 ></v-text-field>
               </v-flex>
               <v-flex xs5>
                 <v-text-field
                   type="text"
-                  name="last_name"
                   label="Last Name"
                   v-model="customerModel.last_name"
+                  :rules="[rules.required]"
                   required
                 ></v-text-field>
               </v-flex>
@@ -42,13 +47,14 @@
           <v-flex xs2>
             <v-subheader>Date of Birth</v-subheader>
           </v-flex>
-          <v-flex xs10>
+          <v-flex xs5>
             <v-text-field
               type="date"
-              name="date_of_birth"
               label="Date of Birth"
               v-model="customerModel.date_of_birth"
               prepend-icon="perm_contact_calendar"
+              :rules="[rules.required]"
+              required
             ></v-text-field>
           </v-flex>
         </v-layout>
@@ -66,10 +72,11 @@
               <v-flex>
                 <v-text-field
                   type="email"
-                  name="email"
                   label="Email"
                   v-model="item.email"
                   prepend-icon="email"
+                  :rules="[rules.required, rules.email]"
+                  required
                 ></v-text-field>
               </v-flex>
 
@@ -99,10 +106,11 @@
               <v-flex>
                 <v-text-field
                   type="text"
-                  name="phone_number"
                   label="Phone Number"
                   v-model="item.phone_number"
                   prepend-icon="phone"
+                  :rules="[rules.required, rules.phoneNumber]"
+                  required
                 ></v-text-field>
               </v-flex>
 
@@ -139,49 +147,54 @@
                       label="Country"
                       v-model="item.country"
                       prepend-icon="room"
+                      :rules="[rules.required]"
+                      required
                     ></v-select>
                   </v-flex>
 
                   <v-flex xs5>
                     <v-text-field
                       type="text"
-                      name="state"
                       label="State"
                       v-model="item.state"
+                      :rules="[rules.required]"
+                      required
                     ></v-text-field>
                   </v-flex>
 
                   <v-flex xs8>
                     <v-text-field
                       type="text"
-                      name="city"
                       label="City"
                       v-model="item.city"
+                      :rules="[rules.required]"
+                      required
                     ></v-text-field>
                   </v-flex>
 
                   <v-flex xs4>
                     <v-text-field
                       type="text"
-                      name="zip_code"
                       label="Zip Code"
                       v-model="item.zip_code"
+                      :rules="[rules.required, rules.zipCode]"
+                      required
                     ></v-text-field>
                   </v-flex>
 
                   <v-flex xs6>
                     <v-text-field
                       type="text"
-                      name="address1"
                       label="Address1"
                       v-model="item.address1"
+                      :rules="[rules.required]"
+                      required
                     ></v-text-field>
                   </v-flex>
 
                   <v-flex xs6>
                     <v-text-field
                       type="text"
-                      name="address2"
                       label="Address2"
                       v-model="item.address2"
                     ></v-text-field>
@@ -207,9 +220,18 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn @click="cancel">Cancel</v-btn>
-        <v-btn color="primary" type="submit">Save</v-btn>
+        <v-btn color="primary" type="submit" :disabled="!formValid">Save</v-btn>
       </v-card-actions>
+
     </v-form>
+
+    <v-snackbar :timeout="3000" v-model="formError" top color="error" absolute>
+      <ul>
+        <li v-for="(fe, index) in formErrors" :key="index">
+          {{ fe }}
+        </li>
+      </ul>
+    </v-snackbar>
   </v-card>
 
 </template>
@@ -217,22 +239,53 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import validators from '@/mixins/validators'
+
 export default {
-  data: () => ({
-    dialog: false
-  }),
+  mixins: [validators],
+  data() {
+    return {
+      formValid: true,
+      formErrors: []
+    }
+  },
   computed: {
-    ...mapGetters([
-      'editForm',
-      'customerModel',
-      'countries',
-      'editting',
-      'loading'
-    ])
+    formError: {
+      get: function() {
+        return this.formErrors.length > 0
+      },
+      set: function(value) {
+        if (!value) {
+          this.formErrors = []
+        }
+      }
+    },
+    ...mapGetters(['customerModel', 'countries', 'editting', 'loading'])
   },
   methods: {
-    submit(e) {
-      console.log('submit')
+    validateAtFormLevel() {
+      this.formErrors = []
+
+      if (this.customerModel.emails.length === 0) {
+        this.formErrors.push('Must have at least 1 email.')
+      }
+
+      if (this.customerModel.phone_numbers.length === 0) {
+        this.formErrors.push('Must have at least 1 phone number.')
+      }
+    },
+    submit() {
+      if (!this.$refs.form.validate()) {
+        return
+      }
+
+      this.validateAtFormLevel()
+
+      if (this.formError) {
+        return
+      }
+
+      console.log(this.customerModel)
     },
     cancel() {
       this.setEditForm(false)
@@ -262,7 +315,9 @@ export default {
       'addCustomerPhoneNumber',
       'removeCustomerPhoneNumber',
       'addCustomerAddress',
-      'removeCustomerAddress'
+      'removeCustomerAddress',
+      'addCustomer',
+      'editCustomer'
     ])
   }
 }

@@ -65,11 +65,11 @@
       <customer-form />
     </v-dialog>
 
-    <v-snackbar :timeout="2000" success v-model="success">
+    <v-snackbar :timeout="2000" color="success" v-model="success">
       Request done successfully!
     </v-snackbar>
 
-    <v-snackbar :timeout="3000" error v-model="error">
+    <v-snackbar :timeout="3000" color="error" v-model="error">
       There was an error during request!
     </v-snackbar>
   </div>
