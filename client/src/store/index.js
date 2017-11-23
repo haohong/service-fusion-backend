@@ -166,7 +166,7 @@ const actions = {
         commit('SUCCESS')
       })
       .catch(e => {
-        commit('ERROR', e)
+        commit('ERROR', e.response.data)
       })
   },
   setCustomer({ commit }, payload) {
@@ -190,7 +190,7 @@ const actions = {
         dispatch('getCustomers')
       })
       .catch(e => {
-        commit('ERROR', e)
+        commit('ERROR', e.response.data)
       })
   },
   editCustomer({ commit, dispatch }, payload) {
@@ -208,7 +208,7 @@ const actions = {
         dispatch('getCustomers')
       })
       .catch(e => {
-        commit('ERROR', e)
+        commit('ERROR', e.response.data)
       })
   },
   deleteCustomer({ commit, dispatch }, payload) {
@@ -226,7 +226,7 @@ const actions = {
         }
       })
       .catch(e => {
-        commit('ERROR', e)
+        commit('ERROR', e.response.data)
       })
   },
   clearError({ commit }) {

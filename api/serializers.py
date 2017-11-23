@@ -116,7 +116,7 @@ class PersonSerializer(serializers.ModelSerializer):
         """
         emails = [email_data['email'] for email_data in value]
         if has_duplicate(emails):
-            raise serializers.ValidationError("Duplicate emails in payload")
+            raise serializers.ValidationError("Duplicate emails in payload.")
 
         queryset = Email.objects.filter(email__in=emails)
         if self.instance:
@@ -144,7 +144,7 @@ class PersonSerializer(serializers.ModelSerializer):
                          for phone_number_data in value]
         if has_duplicate(phone_numbers):
             raise serializers.ValidationError(
-                "Duplicate phone_numbers in payload")
+                "Duplicate phone_numbers in payload.")
 
         queryset = PhoneNumber.objects.filter(phone_number__in=phone_numbers)
         if self.instance:

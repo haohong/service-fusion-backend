@@ -29,8 +29,12 @@
       Request done successfully!
     </v-snackbar>
 
-    <v-snackbar :timeout="3000" color="error" v-model="error">
-      There was an error during request!
+    <v-snackbar :timeout="5000" color="error" v-model="error">
+      <ul>
+        <li v-for="(error, index) in errorArr" :key="index">
+          {{ error }}
+        </li>
+      </ul>
     </v-snackbar>
 
   </v-app>
@@ -38,6 +42,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import * as _ from 'lodash'
 
 export default {
   computed: {
@@ -56,6 +61,25 @@ export default {
       set: function(value) {
         this.clearError()
       }
+    },
+    errorArr: function() {
+      const errorMap = this.$store.state.status.error
+
+      return _.reduce(
+        errorMap,
+        (result, val, key) => {
+          const field = _.capitalize(key)
+          const errors = _.flatMap(
+            val,
+            error => (_.isObject(error) ? _.values(error) : error)
+          )
+
+          result = result.concat(errors.map(error => `${field}: ${error}`))
+
+          return result
+        },
+        []
+      )
     }
   },
   methods: {
